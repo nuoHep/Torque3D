@@ -23,3 +23,28 @@
 //-----------------------------------------------------------------------------
 // Game specific profiles are located here
 //-----------------------------------------------------------------------------
+
+if( !isObject( GuiTreeViewProfile ) )
+new GuiControlProfile( GuiTreeViewProfile )
+{
+   bitmap            = "./treeView";
+   autoSizeHeight    = true;
+   canKeyFocus       = true;
+   
+   fillColor = "255 255 255"; //GuiDefaultProfile.fillColor;
+   fillColorHL = "228 228 235";//GuiDefaultProfile.fillColorHL;
+   fillColorSEL = "98 100 137";
+   fillColorNA = "255 255 255";//GuiDefaultProfile.fillColorNA;
+   fontColor = "0 0 0";//GuiDefaultProfile.fontColor;
+   fontColorHL = "0 0 0";//GuiDefaultProfile.fontColorHL;   
+   fontColorSEL= "255 255 255";//GuiDefaultProfile.fontColorSEL;
+   fontColorNA = "200 200 200";//GuiDefaultProfile.fontColorNA;
+   borderColor = "128 000 000";
+   borderColorHL = "255 228 235";
+
+   fontSize = 14;
+   
+   opaque = false;
+   border = false;
+   category = "Core";
+};

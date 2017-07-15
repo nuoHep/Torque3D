@@ -89,6 +89,7 @@ function initClient()
    exec("scripts/gui/chooseLevelDlg.cs");
    exec("scripts/gui/loadingGui.cs");
    exec("scripts/gui/optionsDlg.cs");
+   exec("scripts/gui/treeViewDlg.cs");
 
    // Client scripts
    exec("./missionDownload.cs");

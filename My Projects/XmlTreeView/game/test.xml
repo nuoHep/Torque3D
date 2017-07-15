@@ -1,0 +1,19 @@
+<root>
+	<item1></item1>
+	<item2>
+		<item2-1/>
+		<item2-2>lorem ipsum</item2-2>
+		<item2-3/>
+	</item2>
+	<item3></item3>
+	<item4>
+		<item4-1/>
+		<item4-2>
+			<item4-2-1/>
+			lorem ipsum
+			<item4-2-2/>
+		</item4-2>
+		<item4-3/>
+	</item4>
+	<item5></item5>
+</root>
