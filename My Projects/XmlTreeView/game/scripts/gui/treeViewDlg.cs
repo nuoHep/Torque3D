@@ -6,7 +6,7 @@ function TreeViewDlg::onWake( %this )
 
 function XmlTreeView::onSelect( %this, %itemId )
 {
-    %node = %this.selectedNode();
+    %node = %this.getItemNode(%itemId);
     XmlNodeName.setText( %node.name() );
     XmlNodeText.setText( %node.text() );
 }

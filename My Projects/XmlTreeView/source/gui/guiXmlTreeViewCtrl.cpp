@@ -73,17 +73,13 @@ IMPLEMENT_CONOBJECT( GuiXmlTreeViewCtrl );
 GuiXmlTreeViewCtrl::GuiXmlTreeViewCtrl() :
    mShowRoot(false),
    mShowXmlComments(false),
-   mShowXmlDeclarations(false),
-   mSelectedNode(new GuiXmlTreeViewCtrlNode)
+   mShowXmlDeclarations(false)
 {
    // disable some stuff on GuiTreeViewCtrl which we do not support
    mSupportMouseDragging = false;
    mMultipleSelections = false;
    mDeleteObjectAllowed = false;
    mDragToItemAllowed = false;
-
-   // XXX: should we unregister it somewhere?
-   mSelectedNode->registerObject();
 }
 
 bool GuiXmlTreeViewCtrl::onWake()
@@ -102,18 +98,13 @@ bool GuiXmlTreeViewCtrl::onVirtualParentExpand(Item *item)
       return true;
 
    const S32 itemIndex = item->getID();
-   const TiXmlNode* node = mXmlNodes[itemIndex - 1];
+   const TiXmlNode* node = getItemNode(itemIndex);
+   assert(node);
    for (auto child = node->FirstChild(); child; child = child->NextSibling())
       insertXmlNode(itemIndex, child);
    item->setVirtualParent(false);
 
    return true;
-}
-
-void GuiXmlTreeViewCtrl::onItemSelected(Item *item)
-{
-   mSelectedNode->setNode(mXmlNodes[item->getID() - 1]);
-   Parent::onItemSelected(item);
 }
 
 void GuiXmlTreeViewCtrl::initPersistFields()
@@ -171,7 +162,6 @@ void GuiXmlTreeViewCtrl::clear()
    mXmlNodes.clear();
    if (mXmlDoc)
       mXmlDoc->Clear();
-   mSelectedNode->setNode(nullptr);
    updateTree();
 }
 
@@ -200,10 +190,10 @@ void GuiXmlTreeViewCtrl::updateTree()
    }
 }
 
-// returns the proxy for the currently selected node
-const GuiXmlTreeViewCtrlNode* GuiXmlTreeViewCtrl::selectedNode() const
+// returns the xml node for the given itemId
+const TiXmlNode* GuiXmlTreeViewCtrl::getItemNode(S32 itemId) const
 {
-   return mSelectedNode;
+   return itemId <= mXmlNodes.size() ? mXmlNodes[itemId - 1] : nullptr;
 }
 
 DefineEngineMethod( GuiXmlTreeViewCtrl, openFile, bool, ( const char* path ), ,
@@ -228,12 +218,15 @@ DefineEngineMethod( GuiXmlTreeViewCtrl, clear, void, (), ,
    object->clear();
 }
 
-DefineEngineMethod( GuiXmlTreeViewCtrl, selectedNode, const GuiXmlTreeViewCtrlNode*, (), ,
-   "@brief Returns the currently selected node.\n\n"
-   "@note The node is *always* the currently selected one, so if the user"
-   "changes the selection the data in the node *will* change.")
+DefineEngineMethod( GuiXmlTreeViewCtrl, getItemNode, GuiXmlTreeViewCtrlNode*, (S32 itemId), ,
+   "@brief Returns the xml node for the given itemId.\n\n"
+   "@param itemId The id of the item in the tree.\n"
+   "@return Proxy structuor containg info about the node.")
 {
-   return object->selectedNode();
+   const TiXmlNode* node = object->getItemNode(itemId);
+   auto proxy = new GuiXmlTreeViewCtrlNode(node);
+   proxy->registerObject();
+   return proxy;
 }
 
 void GuiXmlTreeViewCtrl::insertXmlNode(S32 parentId, const TiXmlNode *node)

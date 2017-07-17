@@ -10,10 +10,10 @@
 class GuiXmlTreeViewCtrlNode : public SimObject
 {
    using Parent = SimObject;
-   friend class GuiXmlTreeViewCtrl;
 
 public:
    GuiXmlTreeViewCtrlNode() : mNode(nullptr) {}
+   GuiXmlTreeViewCtrlNode(const TiXmlNode *node) : mNode(node) {}
 
    bool empty() const { return !mNode; }
    // node info accessors, valid only when !empty()
@@ -25,8 +25,6 @@ public:
    DECLARE_CONOBJECT(GuiXmlTreeViewCtrlNode);
 
 private:
-   void setNode(const TiXmlNode* node) { mNode = node; }
-
    const TiXmlNode *mNode;
 };
 
@@ -39,7 +37,6 @@ public:
 
    bool onWake() override;
    bool onVirtualParentExpand(Item *item) override;
-   void onItemSelected(Item *item) override;
 
    static void initPersistFields();
 
@@ -47,7 +44,7 @@ public:
    bool parse(const char *text);
    void clear();
    void updateTree();
-   const GuiXmlTreeViewCtrlNode* selectedNode() const;
+   const TiXmlNode* getItemNode(S32 itemId) const;
 
    DECLARE_CONOBJECT(GuiXmlTreeViewCtrl);
    DECLARE_DESCRIPTION("A control that displays a hierarchical tree view of a an xml 'file'.\n"
@@ -64,7 +61,6 @@ private:
 
    std::unique_ptr<TiXmlDocument> mXmlDoc;
    Vector<const TiXmlNode*> mXmlNodes;
-   SimObjectPtr<GuiXmlTreeViewCtrlNode> mSelectedNode;
 };
 
 #endif // _GUI_XMLTREEVIEWCTRL_H_
